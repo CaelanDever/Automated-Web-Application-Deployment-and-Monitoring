@@ -1,7 +1,5 @@
 # Automated-Web-Application-Deployment-and-Monitoring
 
-# Automated Web Application Deployment and Monitoring with Linode
-
 ## Introduction
 
 This repository demonstrates a beginner-friendly approach to deploying, automating, monitoring, and scaling a web application using **Linode servers**. It provides hands-on experience with essential DevOps tools and practices, making it an excellent learning project for those new to Linux system administration and automation.
