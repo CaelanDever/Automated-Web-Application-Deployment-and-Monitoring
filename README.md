@@ -7,5 +7,4 @@ This project demonstrates a complete workflow to deploy, automate, monitor, and 
 - **Prometheus and Grafana**: For monitoring and visualizing system and application metrics.
 - **Fluentd**: For centralized logging.
 - **OpenLDAP**: For centralized authentication.
-
-
+________________________________________________________________________________________________________________________________________________________________________
