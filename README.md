@@ -187,3 +187,151 @@ sudo systemctl enable prometheus
 
 Access Prometheus at http://45.79.201.189:9090
 
+Step 7: Install Grafana
+Add the Grafana repo and install Grafana:
+
+sudo yum install -y https://dl.grafana.com/oss/release/grafana-9.4.7-1.x86_64.rpm
+sudo systemctl start grafana-server
+sudo systemctl enable grafana-server
+
+<img width="452" alt="bf" src="https://github.com/user-attachments/assets/d5efd1ac-c663-4133-b926-6d57f66e60d4" />
+
+Access Grafana at http://45.79.201.189:3000 (default login: admin/admin).
+
+
+
+
+
+# Phase 5: Centralized Authentication
+Step 9: Set Up LDAP
+Install OpenLDAP:
+
+sudo yum install -y openldap openldap-servers openldap-clients
+sudo systemctl start slapd
+sudo systemctl enable slapd
+
+<img width="453" alt="cff" src="https://github.com/user-attachments/assets/eb09604d-a58d-4230-9abf-cb5fc94bf654" />
+
+Add LDAP users:
+
+ldapadd -x -D "cn=Manager,dc=example,dc=com" -W -f users.ldif
+
+# Phase 6: Scripting and Debugging
+
+Write Python scripts to manage infrastructure and debug issues effectively.
+
+Step 1: Understand the Goal
+We are writing a Python script that:
+
+Checks how much disk space is used on your Linux server.
+Sends an email alert if usage exceeds a certain percentage.
+
+Create a new Python script file:
+nano monitor_disk_usage.py
+
+Add this code:
+
+import os
+import smtplib
+from email.mime.text import MIMEText
+import shutil
+
+def check_disk_usage(path="/"):
+    total, used, free = shutil.disk_usage(path)
+    percent_used = (used / total) * 100
+    return percent_used, free
+
+def send_email_alert(subject, body, to_email):
+    from_email = "your_email@example.com"
+    smtp_server = "smtp.example.com"
+    smtp_port = 587
+    password = "your_password"
+    
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = from_email
+    msg["To"] = to_email
+    
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(from_email, password)
+            server.sendmail(from_email, to_email, msg.as_string())
+            print("Alert email sent successfully.")
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+def monitor_disk_usage(threshold=80, path="/", alert_email="admin@example.com"):
+    usage, free_space = check_disk_usage(path)
+    if usage > threshold:
+        subject = f"Disk Usage Alert: {usage:.2f}% Used"
+        body = (f"Warning! Disk usage on {path} has exceeded {threshold}%.\n"
+                f"Current usage: {usage:.2f}%\nFree space: {free_space / (1024**3):.2f} GB.")
+        send_email_alert(subject, body, alert_email)
+
+if __name__ == "__main__":
+    path_to_monitor = "/"  # Root directory
+    usage_threshold = 80  # Alert if usage exceeds 80%
+    admin_email = "admin@example.com"
+    monitor_disk_usage(threshold=usage_threshold, path=path_to_monitor, alert_email=admin_email)
+
+
+<img width="451" alt="grr" src="https://github.com/user-attachments/assets/16724ab6-0565-47fc-8308-029b962dbd1a" />
+
+Step 4: Update Email Settings
+Open the script again:
+
+vimmonitor_disk_usage.py
+
+Update the following placeholders:
+
+your_email@example.com: Replace with your email address (e.g., myemail@gmail.com).
+smtp.example.com: Replace with your email provider's SMTP server (e.g., Gmail: smtp.gmail.com).
+your_password: Replace with your email password or an app-specific password.
+admin@example.com: Replace with the email that should receive alerts.
+Save and exit the script.
+
+<img width="455" alt="fc" src="https://github.com/user-attachments/assets/9b96cd1c-9a83-4112-9b25-5ca6f2f82267" />
+
+
+Step 5: Test the Script
+Run the script manually
+
+python3 monitor_disk_usage.py
+
+Force a test alert by temporarily setting the threshold to 0
+
+Open the script:
+
+nano monitor_disk_usage.py
+
+Find this line:
+
+usage_threshold = 80
+
+Change 80 to 0 and save.
+Run the script again. You should receive a test email alert.
+
+<img width="455" alt="fa" src="https://github.com/user-attachments/assets/7cdae257-5e5f-4607-aaf6-a5cc7a017731" />
+
+I purposefully did not put in my real password for security purposes.
+
+Step 6: Automate the Script
+Open the crontab editor:
+
+crontab -e
+
+Add this line to run the script every hour:
+
+0 * * * * /usr/bin/python3 /home/root/monitor_disk_usage.py
+
+<img width="428" alt="gq" src="https://github.com/user-attachments/assets/3041f403-2a83-42d2-a585-1a6b2aeb7b79" />
+
+Save and exit. wq!
+
+Step 7: Monitor and Debug
+
+If no emails are received:
+Check your email settings and credentials.
+Verify the server has internet access.
+Test by filling the disk or lowering the threshold.
