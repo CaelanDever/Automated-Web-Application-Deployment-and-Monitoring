@@ -1,0 +1,28 @@
+---
+- name: Deploy To-Do List App
+  hosts: todo_vms
+  become: yes
+  tasks:
+    - name: Update all packages
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull and Run the To-Do List App container
+      shell: |
+        docker pull todo-app:latest
+        docker run -d -p 5000:5000 --name todo-app todo-app
+      args:
+        creates: /var/run/docker.sock
