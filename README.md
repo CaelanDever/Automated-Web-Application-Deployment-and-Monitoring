@@ -404,6 +404,8 @@ Verify Ansible can connect to all servers
 
 ansible -i inventory.ini all -m ping
 
+<img width="413" alt="ve" src="https://github.com/user-attachments/assets/9c3ea2be-0c32-4ad2-90ef-2250fdbf95e8" />
+
 Successful output should show
 
 vm1 | SUCCESS => {"changed": false, "ping": "pong"}
@@ -449,6 +451,8 @@ Structure of the Playbook: Ensure it installs Docker, pulls the app, and starts 
       args:
         creates: /var/run/docker.sock
 
+  <img width="427" alt="ge" src="https://github.com/user-attachments/assets/5b7b4c2f-33c7-4fe1-a7a0-b447e73572d7" />
+
 5. Deploy the Application
 
 Run the Ansible playbook to configure and deploy the app across all servers, including the new ones.
@@ -456,6 +460,10 @@ Run the Ansible playbook to configure and deploy the app across all servers, inc
 Run the Playbook:
 
 ansible-playbook -i inventory.ini deploy.yml
+
+
+<img width="451" alt="few" src="https://github.com/user-attachments/assets/82cb2170-056c-4a14-b0c9-2de6253cf98d" />
+
 
 Monitor the Output:
 
@@ -469,8 +477,8 @@ ok: [vm3]
 
 
 TASK [Install Docker] **************************************************
+changed: [vm2]
 changed: [vm3]
-changed: [vm4]
 
 TASK [Update all packages] *********************************************
 ok: [vm1]
@@ -480,9 +488,14 @@ ok: [vm3]
 
 TASK [Install Docker] **************************************************
 changed: [vm2]
-changed: [vm4]
+changed: [vm3]
 
 6. Verify Deployment
+
+Check docker image is running:
+
+![image](https://github.com/user-attachments/assets/18500e67-4a96-4a3f-bab7-9c821e15cb59)
+
 
 Check App Availability:
 
@@ -519,7 +532,7 @@ backend http_back
     server web1 <EXISTING_SERVER_1_IP>:5000 check
     server web2 <EXISTING_SERVER_2_IP>:5000 check
     server web3 <NEW_SERVER_3_IP>:5000 check
-    server web4 <NEW_SERVER_4_IP>:5000 check
+   
 Reload HAProxy:
 
 sudo systemctl reload haproxy
