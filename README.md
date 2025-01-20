@@ -540,15 +540,24 @@ backend http_back
     server web1 <EXISTING_SERVER_1_IP>:5000 check
     server web2 <EXISTING_SERVER_2_IP>:5000 check
     server web3 <NEW_SERVER_3_IP>:5000 check
+
+<img width="402" alt="grg" src="https://github.com/user-attachments/assets/1993a32f-961b-4e94-a2f8-fa389bb3264f" />
+
    
 Reload HAProxy:
 
 sudo systemctl reload haproxy
 
+<img width="323" alt="yw" src="https://github.com/user-attachments/assets/1184e047-1cef-46e7-a7fb-8139ef3c40a2" />
+
+
 Test Load Balancer:
 
 Visit the load balancer’s IP (http://<HAPROXY_IP>).
 Requests should round-robin across all four servers.
+
+<img width="266" alt="cass" src="https://github.com/user-attachments/assets/b5aa7821-7dda-4b81-8816-0b3ba95a1b37" />
+
 
 8. Add Monitoring for New Servers
 
