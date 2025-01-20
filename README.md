@@ -590,6 +590,9 @@ Confirm the app is reachable and working on all new servers.
 <img width="281" alt="tq" src="https://github.com/user-attachments/assets/055bfb3e-e5c5-4d2b-abde-fe7561263c89" />
 
 
+<img width="270" alt="ewr" src="https://github.com/user-attachments/assets/4d24ab9d-d2f3-47b4-93d4-e2af4e217d2a" />
+
+
 7. Update Load Balancer
 
 If you’re using HAProxy or a similar load balancer, update its configuration to include the new servers.
