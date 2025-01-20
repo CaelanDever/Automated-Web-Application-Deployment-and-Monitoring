@@ -501,6 +501,8 @@ Check App Availability:
 
 Visit http://<NEW_SERVER_IP>:5000 in your browser for each new server.
 
+<img width="529" alt="cvs" src="https://github.com/user-attachments/assets/6ba66cbd-35e9-4d93-8cb3-58ebb9f82607" />
+
 Check Docker Containers:
 
 SSH into one of the new servers:
@@ -513,9 +515,15 @@ docker ps
 
 Output should show the running todo-app container.
 
+<img width="452" alt="gtt" src="https://github.com/user-attachments/assets/61d32319-de9c-4a54-91dc-dc2ac971ce71" />
+
+
 Test Across All Servers:
 
 Confirm the app is reachable and working on all new servers.
+
+<img width="281" alt="tq" src="https://github.com/user-attachments/assets/055bfb3e-e5c5-4d2b-abde-fe7561263c89" />
+
 
 7. Update Load Balancer
 
