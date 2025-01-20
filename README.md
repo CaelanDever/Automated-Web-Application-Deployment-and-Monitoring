@@ -1,7 +1,63 @@
-# Automated-Web-Application-Deployment-and-Monitoring
+# Automated Web Application Deployment and Monitoring
 
-This project demonstrates a complete workflow to deploy, automate, monitor, and scale a web application using **Linode servers**. It contains hands-on experience with essential DevOps tools and practices.
-________________________________________________________________________________________________________________________________________________________________________
+This project demonstrates the complete workflow for deploying, automating, monitoring, and scaling a Flask-based To-Do List Web Application using Linode servers. By leveraging essential DevOps tools and practices, the project showcases an end-to-end solution, from initial server setup to advanced scaling and monitoring.
+
+# 🚀 Key Features
+
+Automated Server Setup: Shell scripts automate the installation and configuration of essential tools like Docker and OpenLDAP.
+
+ Containerized Application Deployment: The web application is containerized using Docker, ensuring consistency across environments.
+Infrastructure as Code (IaC): Ansible is used to manage and deploy the app across multiple servers.
+
+Scalable Architecture: Easily add new servers and integrate them with the existing infrastructure, including load balancing with HAProxy.
+
+Comprehensive Monitoring: Prometheus and Grafana provide real-time metrics and dashboards for proactive monitoring.
+
+Disk Usage Alert System: A Python script monitors disk space and sends email alerts for threshold breaches.
+
+# 🛠️ Technologies Used
+
+Infrastructure: Linode CentOS 9 Stream servers
+
+Automation: Shell scripting, Ansible
+
+Containerization: Docker
+
+Monitoring: Prometheus, Grafana
+
+Authentication: OpenLDAP
+
+Load Balancing: HAProxy
+
+Programming Languages: Python, Bash
+
+📖 Workflow Overview
+
+Phase 1: Basic Setup
+
+Create and configure Linode servers.
+
+Install and configure Docker to run the Flask web application.
+
+Phase 2: Automation
+
+Automate server setup and app deployment with Bash scripts.
+
+Phase 3: Monitoring
+
+Install Prometheus and Grafana for monitoring infrastructure and applications.
+
+Phase 4: Centralized Authentication
+
+Set up OpenLDAP for user authentication and management.
+
+Phase 5: Disk Monitoring
+
+Python script monitors disk usage and sends email alerts for high usage.
+
+Phase 6: Scaling
+
+Add new Linode servers, deploy the app with Ansible, and update HAProxy and monitoring configurations._________________________________________________________________________________________________________________
 
 # Phase 1: Set Up the Basics
 
