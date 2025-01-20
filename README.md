@@ -14,6 +14,7 @@ After deployment, note the IP addresses of your servers.
 <img width="434" alt="dwwd" src="https://github.com/user-attachments/assets/c7a103d8-23f7-4f17-8f51-bec683890398" />
 
 SSH into the servers via MobaXterm:
+
 ssh root@45.79.201.189
 
 Step 2: Update and Configure Servers
@@ -21,18 +22,22 @@ Step 2: Update and Configure Servers
 Run these commands on both servers:
 
 Update the system
+
 sudo yum update -y
 
 Install basic tools
+
 sudo yum install -y epel-release vim wget curl
 
 <img width="480" alt="vc" src="https://github.com/user-attachments/assets/fdb5fef6-8042-40ea-b54b-c60becd9521c" />
 
 Step 3: Install Docker
+
 Install Docker:
 
 sudo yum install -y yum-utils
-sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum-config-manager --add-repo 
+https://download.docker.com/linux/centos/docker-ce.repo
 sudo yum install -y docker-ce docker-ce-cli containerd.io
 
 <img width="481" alt="acs" src="https://github.com/user-attachments/assets/63887e0b-4296-4ae1-ad07-a53d7c66253c" />
@@ -86,7 +91,6 @@ def home():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
 
-
 <img width="276" alt="gf" src="https://github.com/user-attachments/assets/7608780f-a610-44b8-b338-be70a117f062" />
 
 vim requirements.txt
@@ -100,7 +104,6 @@ Build and run the app:
 docker build -t todo-app .
 docker run -d -p 5000:5000 todo-app 
 
-
 <img width="481" alt="ef" src="https://github.com/user-attachments/assets/4bdb135d-d235-47a9-a254-7f95af451417" />
 
 Test the app by visiting http://45.79.201.189:5000.
@@ -110,6 +113,7 @@ Test the app by visiting http://45.79.201.189:5000.
 # Phase 2: Automate Setup with Scripts
 
 Step 5: Write Bash Automation Scripts
+
 Create a script to automate server setup (setup.sh):
 
 vim setup.sh
@@ -127,6 +131,7 @@ sudo systemctl enable docker
 <img width="432" alt="tw" src="https://github.com/user-attachments/assets/cdb81d0e-bb03-4aa8-981c-d048fba751f8" />
 
 Make the script executable:
+
 chmod +x setup.sh
 
 Run the script:
@@ -138,6 +143,7 @@ Run the script:
 # Phase 3: Monitoring and Alerting
 
 Step 6: Install Prometheus
+
 On the first server, download and install Prometheus:
 
 sudo useradd --no-create-home prometheus
@@ -182,6 +188,7 @@ sudo systemctl enable prometheus
 Access Prometheus at http://45.79.201.189:9090
 
 Step 7: Install Grafana
+
 Add the Grafana repo and install Grafana:
 
 sudo yum install -y https://dl.grafana.com/oss/release/grafana-9.4.7-1.x86_64.rpm
@@ -192,9 +199,9 @@ sudo systemctl enable grafana-server
 
 Access Grafana at http://45.79.201.189:3000 (default login: admin/admin).
 
-
 # Phase 4: Centralized Authentication
-Step 9: Set Up LDAP
+
+Step 1: Set Up LDAP
 Install OpenLDAP:
 
 sudo yum install -y openldap openldap-servers openldap-clients
@@ -212,9 +219,11 @@ ldapadd -x -D "cn=Manager,dc=example,dc=com" -W -f users.ldif
 Write Python scripts to manage infrastructure and debug issues effectively.
 
 Step 1: Understand the Goal
+
 We are writing a Python script that:
 
 Checks how much disk space is used on your Linux server.
+
 Sends an email alert if usage exceeds a certain percentage.
 
 Create a new Python script file:
@@ -270,6 +279,7 @@ if __name__ == "__main__":
 <img width="451" alt="grr" src="https://github.com/user-attachments/assets/16724ab6-0565-47fc-8308-029b962dbd1a" />
 
 Step 4: Update Email Settings
+
 Open the script again:
 
 vimmonitor_disk_usage.py
@@ -286,6 +296,7 @@ Save and exit the script.
 
 
 Step 5: Test the Script
+
 Run the script manually
 
 python3 monitor_disk_usage.py
@@ -308,6 +319,7 @@ Run the script again. You should receive a test email alert.
 I purposefully did not put in my real password for security purposes.
 
 Step 6: Automate the Script
+
 Open the crontab editor:
 
 crontab -e
@@ -323,8 +335,11 @@ Save and exit. wq!
 Step 7: Monitor and Debug
 
 If no emails are received:
+
 Check your email settings and credentials.
+
 Verify the server has internet access.
+
 Test by filling the disk or lowering the threshold.
 
 # Phase 6: Scaling – Add More Servers
@@ -332,11 +347,15 @@ Test by filling the disk or lowering the threshold.
 This step walks you through scaling your infrastructure by adding new Linode servers, configuring them, and using Ansible to deploy your application across these new servers in detail.
 
 Add More Servers
+
 1. Create New Linode Servers
+
 Log in to Linode:
 
 Go to your Linode dashboard.
+
 Click Create > Linode.
+
 Configure Your New Linodes:
 
 Image: Select CentOS 9 Stream.
@@ -351,26 +370,8 @@ Once created, note the public IP addresses of the new servers. These will be use
 <img width="461" alt="vsd" src="https://github.com/user-attachments/assets/2887867a-bf06-411a-b3c9-8761d468587e" />
 
 
-Phase 7: Scaling – Step 11: Add More Servers
-This step walks you through scaling your infrastructure by adding new Linode servers, configuring them, and using Ansible to deploy your application across these new servers in detail.
-
-Step 11: Add More Servers
-1. Create New Linode Servers
-Log in to Linode:
-
-Go to your Linode dashboard.
-Click Create > Linode.
-Configure Your New Linodes:
-
-Image: Select CentOS 9 Stream.
-Region: Choose the same region as your existing servers.
-Plan: Select the desired size (e.g., Shared CPU 1GB).
-Label: Name your servers (e.g., todo-app-server-3 and todo-app-server-4).
-Root Password: Set a secure password for the root user.
-Note the IP Addresses:
-
-Once created, note the public IP addresses of the new servers. These will be used in the Ansible inventory file.
 2. Prepare the New Servers
+   
 Before using Ansible, ensure basic connectivity to the new servers.
 
 Access the New Servers via SSH:
@@ -384,6 +385,7 @@ ssh root@<NEW_SERVER_IP>
 Edit the inventory.ini File:
 
 Open your existing inventory file:
+
 vim inventory.ini
 
 Add the new servers under the appropriate group:
@@ -409,6 +411,7 @@ vm2 | SUCCESS => {"changed": false, "ping": "pong"}
 vm3 | SUCCESS => {"changed": false, "ping": "pong"}
 
 4. Update the Ansible Playbook (deploy.yml)
+
 Ensure the playbook is configured to handle new servers dynamically.
 
 Review the Playbook: Open your deploy.yml file:
@@ -447,6 +450,7 @@ Structure of the Playbook: Ensure it installs Docker, pulls the app, and starts 
         creates: /var/run/docker.sock
 
 5. Deploy the Application
+
 Run the Ansible playbook to configure and deploy the app across all servers, including the new ones.
 
 Run the Playbook:
@@ -479,9 +483,11 @@ changed: [vm2]
 changed: [vm4]
 
 6. Verify Deployment
+
 Check App Availability:
 
 Visit http://<NEW_SERVER_IP>:5000 in your browser for each new server.
+
 Check Docker Containers:
 
 SSH into one of the new servers:
@@ -499,6 +505,7 @@ Test Across All Servers:
 Confirm the app is reachable and working on all new servers.
 
 7. Update Load Balancer
+
 If you’re using HAProxy or a similar load balancer, update its configuration to include the new servers.
 
 Edit the HAProxy Config:
@@ -523,6 +530,7 @@ Visit the load balancer’s IP (http://<HAPROXY_IP>).
 Requests should round-robin across all four servers.
 
 8. Add Monitoring for New Servers
+
 Prometheus:
 
 Update /etc/prometheus/prometheus.yml to include new servers as scrape targets:
