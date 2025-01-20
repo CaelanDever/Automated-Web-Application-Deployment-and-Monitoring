@@ -252,6 +252,9 @@ sudo systemctl enable prometheus
 
 Access Prometheus at http://45.79.201.189:9090
 
+<img width="461" alt="yr" src="https://github.com/user-attachments/assets/5e4c5bc5-737c-4de1-88ee-0130ecbd9377" />
+
+
 Step 7: Install Grafana
 
 Add the Grafana repo and install Grafana:
@@ -263,6 +266,11 @@ sudo systemctl enable grafana-server
 <img width="452" alt="bf" src="https://github.com/user-attachments/assets/d5efd1ac-c663-4133-b926-6d57f66e60d4" />
 
 Access Grafana at http://45.79.201.189:3000 (default login: admin/admin).
+
+<img width="441" alt="4323" src="https://github.com/user-attachments/assets/ed821f84-cf07-423e-b847-e498f58d3be9" />
+
+<img width="447" alt="gree" src="https://github.com/user-attachments/assets/e2e4cf79-00bd-4c5f-a95f-480308d63399" />
+
 
 # Phase 4: Centralized Authentication
 
