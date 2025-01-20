@@ -31,7 +31,9 @@ Load Balancing: HAProxy
 
 Programming Languages: Python, Bash
 
+
 📖 Workflow Overview
+
 
 Phase 1: Basic Setup
 
@@ -39,25 +41,32 @@ Create and configure Linode servers.
 
 Install and configure Docker to run the Flask web application.
 
+
 Phase 2: Automation
 
 Automate server setup and app deployment with Bash scripts.
+
 
 Phase 3: Monitoring
 
 Install Prometheus and Grafana for monitoring infrastructure and applications.
 
+
 Phase 4: Centralized Authentication
 
 Set up OpenLDAP for user authentication and management.
+
 
 Phase 5: Disk Monitoring
 
 Python script monitors disk usage and sends email alerts for high usage.
 
+
 Phase 6: Scaling
 
-Add new Linode servers, deploy the app with Ansible, and update HAProxy and monitoring configurations._________________________________________________________________________________________________________________
+Add new Linode servers, deploy the app with Ansible, and update HAProxy and monitoring configurations.
+
+_________________________________________________________________________________________________________________
 
 # Phase 1: Set Up the Basics
 
