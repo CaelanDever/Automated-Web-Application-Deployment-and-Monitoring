@@ -382,6 +382,164 @@ From your local machine, SSH into each new server:
 
 ssh root@<NEW_SERVER_IP>
 
+3. Update the Ansible Inventory File
+
+Edit the inventory.ini File:
+
+Open your existing inventory file:
+vim inventory.ini
+
+Add the new servers under the appropriate group:
+
+[todo_vms]
+vm1 ansible_host=<EXISTING_SERVER_1_IP>
+vm2 ansible_host=<<NEW_SERVER_2_IP>
+vm3 ansible_host=<NEW_SERVER_3_IP>
+
+
+<img width="193" alt="gff" src="https://github.com/user-attachments/assets/1a0149bc-1863-4ce2-9acc-6604c41b086b" />
+
+Test Ansible Connectivity:
+
+Verify Ansible can connect to all servers
+
+ansible -i inventory.ini all -m ping
+
+Successful output should show
+
+vm1 | SUCCESS => {"changed": false, "ping": "pong"}
+vm2 | SUCCESS => {"changed": false, "ping": "pong"}
+vm3 | SUCCESS => {"changed": false, "ping": "pong"}
+
+4. Update the Ansible Playbook (deploy.yml)
+Ensure the playbook is configured to handle new servers dynamically.
+
+Review the Playbook: Open your deploy.yml file:
+
+vim deploy.yml
+
+Structure of the Playbook: Ensure it installs Docker, pulls the app, and starts the container:
+
+---
+- name: Deploy To-Do List App
+  hosts: todo_vms
+  become: yes
+  tasks:
+    - name: Update all packages
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull and Run the To-Do List App container
+      shell: |
+        docker pull todo-app:latest
+        docker run -d -p 5000:5000 --name todo-app todo-app
+      args:
+        creates: /var/run/docker.sock
+
+5. Deploy the Application
+Run the Ansible playbook to configure and deploy the app across all servers, including the new ones.
+
+Run the Playbook:
+
+ansible-playbook -i inventory.ini deploy.yml
+
+Monitor the Output:
+
+Ansible will sequentially connect to each server and run the tasks.
+Look for ok, changed, or success messages for each task
+
+TASK [Update all packages] *********************************************
+ok: [vm1]
+ok: [vm2]
+ok: [vm3]
+
+
+TASK [Install Docker] **************************************************
+changed: [vm3]
+changed: [vm4]
+
+TASK [Update all packages] *********************************************
+ok: [vm1]
+ok: [vm2]
+ok: [vm3]
+
+
+TASK [Install Docker] **************************************************
+changed: [vm2]
+changed: [vm4]
+
+6. Verify Deployment
+Check App Availability:
+
+Visit http://<NEW_SERVER_IP>:5000 in your browser for each new server.
+Check Docker Containers:
+
+SSH into one of the new servers:
+
+ssh root@<NEW_SERVER_IP>
+
+Run:
+
+docker ps
+
+Output should show the running todo-app container.
+
+Test Across All Servers:
+
+Confirm the app is reachable and working on all new servers.
+
+7. Update Load Balancer
+If you’re using HAProxy or a similar load balancer, update its configuration to include the new servers.
+
+Edit the HAProxy Config:
+
+sudo vim /etc/haproxy/haproxy.cfg
+
+Add the new servers under the backend section:
+
+backend http_back
+    balance roundrobin
+    server web1 <EXISTING_SERVER_1_IP>:5000 check
+    server web2 <EXISTING_SERVER_2_IP>:5000 check
+    server web3 <NEW_SERVER_3_IP>:5000 check
+    server web4 <NEW_SERVER_4_IP>:5000 check
+Reload HAProxy:
+
+sudo systemctl reload haproxy
+
+Test Load Balancer:
+
+Visit the load balancer’s IP (http://<HAPROXY_IP>).
+Requests should round-robin across all four servers.
+
+8. Add Monitoring for New Servers
+Prometheus:
+
+Update /etc/prometheus/prometheus.yml to include new servers as scrape targets:
+
+- job_name: 'todo_vms'
+  static_configs:
+    - targets:
+      - vm1:5000
+      - vm2:5000
+      - vm3:5000
+Grafana:
+
+Update dashboards to include metrics from the new servers.
+
 
 Phase 7: Scaling – Step 11: Add More Servers
 This step walks you through scaling your infrastructure by adding new Linode servers, configuring them, and using Ansible to deploy your application across these new servers in detail.
@@ -402,7 +560,6 @@ Root Password: Set a secure password for the root user.
 Note the IP Addresses:
 
 Once created, note the public IP addresses of the new servers. These will be used in the Ansible inventory file.
-
 2. Prepare the New Servers
 Before using Ansible, ensure basic connectivity to the new servers.
 
@@ -415,28 +572,170 @@ ssh root@<NEW_SERVER_IP>
 Set Up SSH Keys for Passwordless Access:
 
 If not already done, copy your public SSH key to the new servers:
-
+bash
+Copy code
 ssh-copy-id root@<NEW_SERVER_IP>
+Verify Connectivity:
 
+Test SSH access:
+bash
+Copy code
+ssh root@<NEW_SERVER_IP>
 3. Update the Ansible Inventory File
-
 Edit the inventory.ini File:
 
 Open your existing inventory file:
+bash
+Copy code
 vim inventory.ini
-
 Add the new servers under the appropriate group:
-
+ini
+Copy code
 [todo_vms]
 vm1 ansible_host=<EXISTING_SERVER_1_IP>
-vm2 ansible_host=<<NEW_SERVER_2_IP>
+vm2 ansible_host=<EXISTING_SERVER_2_IP>
 vm3 ansible_host=<NEW_SERVER_3_IP>
-
-
-<img width="193" alt="gff" src="https://github.com/user-attachments/assets/1a0149bc-1863-4ce2-9acc-6604c41b086b" />
-
-
-
+vm4 ansible_host=<NEW_SERVER_4_IP>
 Test Ansible Connectivity:
 
-Verify Ansible can connect to all servers
+Verify Ansible can connect to all servers:
+bash
+Copy code
+ansible -i inventory.ini all -m ping
+Successful output should show:
+plaintext
+Copy code
+vm1 | SUCCESS => {"changed": false, "ping": "pong"}
+vm2 | SUCCESS => {"changed": false, "ping": "pong"}
+vm3 | SUCCESS => {"changed": false, "ping": "pong"}
+vm4 | SUCCESS => {"changed": false, "ping": "pong"}
+4. Update the Ansible Playbook (deploy.yml)
+Ensure the playbook is configured to handle new servers dynamically.
+
+Review the Playbook: Open your deploy.yml file:
+
+bash
+Copy code
+vim deploy.yml
+Structure of the Playbook: Ensure it installs Docker, pulls the app, and starts the container:
+
+yaml
+Copy code
+---
+- name: Deploy To-Do List App
+  hosts: todo_vms
+  become: yes
+  tasks:
+    - name: Update all packages
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull and Run the To-Do List App container
+      shell: |
+        docker pull todo-app:latest
+        docker run -d -p 5000:5000 --name todo-app todo-app
+      args:
+        creates: /var/run/docker.sock
+5. Deploy the Application
+Run the Ansible playbook to configure and deploy the app across all servers, including the new ones.
+
+Run the Playbook:
+
+bash
+Copy code
+ansible-playbook -i inventory.ini deploy.yml
+Monitor the Output:
+
+Ansible will sequentially connect to each server and run the tasks.
+Look for ok, changed, or success messages for each task:
+plaintext
+Copy code
+TASK [Update all packages] *********************************************
+ok: [vm1]
+ok: [vm2]
+ok: [vm3]
+ok: [vm4]
+
+TASK [Install Docker] **************************************************
+changed: [vm3]
+changed: [vm4]
+6. Verify Deployment
+Check App Availability:
+
+Visit http://<NEW_SERVER_IP>:5000 in your browser for each new server.
+Check Docker Containers:
+
+SSH into one of the new servers:
+bash
+Copy code
+ssh root@<NEW_SERVER_IP>
+Run:
+bash
+Copy code
+docker ps
+Output should show the running todo-app container.
+Test Across All Servers:
+
+Confirm the app is reachable and working on all new servers.
+7. Update Load Balancer
+If you’re using HAProxy or a similar load balancer, update its configuration to include the new servers.
+
+Edit the HAProxy Config:
+
+bash
+Copy code
+sudo vim /etc/haproxy/haproxy.cfg
+Add the new servers under the backend section:
+
+plaintext
+Copy code
+backend http_back
+    balance roundrobin
+    server web1 <EXISTING_SERVER_1_IP>:5000 check
+    server web2 <EXISTING_SERVER_2_IP>:5000 check
+    server web3 <NEW_SERVER_3_IP>:5000 check
+    server web4 <NEW_SERVER_4_IP>:5000 check
+Reload HAProxy:
+
+bash
+Copy code
+sudo systemctl reload haproxy
+Test Load Balancer:
+
+Visit the load balancer’s IP (http://<HAPROXY_IP>).
+Requests should round-robin across all four servers.
+8. Add Monitoring for New Servers
+Prometheus:
+
+Update /etc/prometheus/prometheus.yml to include new servers as scrape targets:
+yaml
+Copy code
+- job_name: 'todo_vms'
+  static_configs:
+    - targets:
+      - vm1:5000
+      - vm2:5000
+      - vm3:5000
+      - vm4:5000
+Grafana:
+
+Update dashboards to include metrics from the new servers.
+Summary of Results
+New Linode servers are created and configured.
+Ansible deploys the app and ensures consistent configuration across all servers.
+The load balancer and monitoring systems are updated to include the new servers.
+The infrastructure is scaled efficiently, with all servers contributing to the app's availability.
+
