@@ -64,7 +64,7 @@ Python script monitors disk usage and sends email alerts for high usage.
 
 Phase 6: Scaling
 
-Add new Linode servers, deploy the app with Ansible, and update HAProxy and monitoring configurations.
+Add new Linode servers, deploy the app with Ansible and update HAProxy.
 
 _________________________________________________________________________________________________________________
 
@@ -623,22 +623,6 @@ Requests should round-robin across all four servers.
 
 <img width="266" alt="cass" src="https://github.com/user-attachments/assets/b5aa7821-7dda-4b81-8816-0b3ba95a1b37" />
 
-
-8. Add Monitoring for New Servers
-
-Prometheus:
-
-Update /etc/prometheus/prometheus.yml to include new servers as scrape targets:
-
-- job_name: 'todo_vms'
-  static_configs:
-    - targets:
-      - vm1:5000
-      - vm2:5000
-      - vm3:5000
-Grafana:
-
-Update dashboards to include metrics from the new servers.
 
 Summary of Results
 
