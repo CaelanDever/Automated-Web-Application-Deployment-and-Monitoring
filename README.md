@@ -1,12 +1,6 @@
 # Automated-Web-Application-Deployment-and-Monitoring
 
-This project demonstrates a complete workflow to deploy, automate, monitor, and scale a web application using **Linode servers**. It contains hands-on experience with essential DevOps tools and practices, including:
-
-- **Docker**: For containerizing a Python Flask application.
-- **Ansible**: For automating server configuration and application deployment.
-- **Prometheus and Grafana**: For monitoring and visualizing system and application metrics.
-- **Fluentd**: For centralized logging.
-- **OpenLDAP**: For centralized authentication.
+This project demonstrates a complete workflow to deploy, automate, monitor, and scale a web application using **Linode servers**. It contains hands-on experience with essential DevOps tools and practices.
 ________________________________________________________________________________________________________________________________________________________________________
 
 # Phase 1: Set Up the Basics
@@ -336,6 +330,113 @@ Check your email settings and credentials.
 Verify the server has internet access.
 Test by filling the disk or lowering the threshold.
 
-# Phase 7: Virtualization and Scaling
+# Phase 7: Scaling – Step 11: Add More Servers
 
-In this phase, you'll use Linode's virtualization tools and simple scaling strategies to expand your infrastructure. This will include deploying additional servers and automating their setup for load balancing.
+This step walks you through scaling your infrastructure by adding new Linode servers, configuring them, and using Ansible to deploy your application across these new servers in detail.
+
+Add More Servers
+1. Create New Linode Servers
+Log in to Linode:
+
+Go to your Linode dashboard.
+Click Create > Linode.
+Configure Your New Linodes:
+
+Image: Select CentOS 9 Stream.
+Region: Choose the same region as your existing servers.
+Plan: Select the desired size (e.g., Shared CPU 1GB).
+Label: Name your servers (e.g., todo-app-server-A and todo-app-server-B).
+Root Password: Set a secure password for the root user.
+Note the IP Addresses:
+
+Once created, note the public IP addresses of the new servers. These will be used in the Ansible inventory file.
+
+<img width="461" alt="vsd" src="https://github.com/user-attachments/assets/2887867a-bf06-411a-b3c9-8761d468587e" />
+
+
+Phase 7: Scaling – Step 11: Add More Servers
+This step walks you through scaling your infrastructure by adding new Linode servers, configuring them, and using Ansible to deploy your application across these new servers in detail.
+
+Step 11: Add More Servers
+1. Create New Linode Servers
+Log in to Linode:
+
+Go to your Linode dashboard.
+Click Create > Linode.
+Configure Your New Linodes:
+
+Image: Select CentOS 9 Stream.
+Region: Choose the same region as your existing servers.
+Plan: Select the desired size (e.g., Shared CPU 1GB).
+Label: Name your servers (e.g., todo-app-server-3 and todo-app-server-4).
+Root Password: Set a secure password for the root user.
+Note the IP Addresses:
+
+Once created, note the public IP addresses of the new servers. These will be used in the Ansible inventory file.
+2. Prepare the New Servers
+Before using Ansible, ensure basic connectivity to the new servers.
+
+Access the New Servers via SSH:
+
+From your local machine, SSH into each new server:
+
+ssh root@<NEW_SERVER_IP>
+
+
+Phase 7: Scaling – Step 11: Add More Servers
+This step walks you through scaling your infrastructure by adding new Linode servers, configuring them, and using Ansible to deploy your application across these new servers in detail.
+
+Step 11: Add More Servers
+1. Create New Linode Servers
+Log in to Linode:
+
+Go to your Linode dashboard.
+Click Create > Linode.
+Configure Your New Linodes:
+
+Image: Select CentOS 9 Stream.
+Region: Choose the same region as your existing servers.
+Plan: Select the desired size (e.g., Shared CPU 1GB).
+Label: Name your servers (e.g., todo-app-server-3 and todo-app-server-4).
+Root Password: Set a secure password for the root user.
+Note the IP Addresses:
+
+Once created, note the public IP addresses of the new servers. These will be used in the Ansible inventory file.
+
+2. Prepare the New Servers
+Before using Ansible, ensure basic connectivity to the new servers.
+
+Access the New Servers via SSH:
+
+From your local machine, SSH into each new server:
+bash
+Copy code
+ssh root@<NEW_SERVER_IP>
+Set Up SSH Keys for Passwordless Access:
+
+If not already done, copy your public SSH key to the new servers:
+
+ssh-copy-id root@<NEW_SERVER_IP>
+
+3. Update the Ansible Inventory File
+
+Edit the inventory.ini File:
+
+Open your existing inventory file:
+vim inventory.ini
+
+Add the new servers under the appropriate group:
+
+[todo_vms]
+vm1 ansible_host=<EXISTING_SERVER_1_IP>
+vm2 ansible_host=<<NEW_SERVER_2_IP>
+vm3 ansible_host=<NEW_SERVER_3_IP>
+
+
+<img width="193" alt="gff" src="https://github.com/user-attachments/assets/1a0149bc-1863-4ce2-9acc-6604c41b086b" />
+
+
+
+Test Ansible Connectivity:
+
+Verify Ansible can connect to all servers
